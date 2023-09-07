@@ -1,0 +1,38 @@
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class SmartPointer {
+private:
+    T* ptr;
+
+public:
+    SmartPointer(T* ptr2 = nullptr) : ptr(ptr2) {
+        cout << "constructor" << endl;
+    }
+
+    ~SmartPointer() {
+        delete ptr;
+        cout << "destructor" << endl;
+    }
+
+   
+    T& operator*() const {
+        return *ptr;
+    }
+
+    T* operator->() const {
+        return ptr;
+    }
+};
+
+int main() {
+    SmartPointer<int> sp1(new int(77));
+    SmartPointer<int> sp2 = sp1;
+
+    std::cout << "*sp1: " << *sp1 << std::endl;
+    std::cout << "*sp2: " << *sp2 << std::endl;
+
+    return 0;
+}
+
