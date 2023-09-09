@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+template <typename t>
+class unique_ptrr
+{
+private:
+	t* ptr;
+public:
+
+	unique_ptrr(t*ptr2) : ptr(ptr2){}
+
+
+	unique_ptrr(const unique_ptrr& obj) = delete;
+
+	unique_ptrr(const unique_ptrr&& obj)
+	{
+		this->ptr = obj.ptr;
+		obj.ptr = nullptr;
+	}
+
+	~unique_ptrr()
+	{
+		
+		delete ptr;
+	}
+
+
+	t* operator*() const
+	{
+		return ptr;
+	}
+
+	t* operator->() const
+	{
+		return ptr;
+	}
+
+
+};
+
+int main()
+{
+	unique_ptrr<int> up(new int(12));
+	cout << *up << endl;
+
+}
