@@ -1,0 +1,97 @@
+
+#include <iostream>
+using namespace std;
+
+template<typename t>
+class shared_pointer
+{
+private:
+	t* ptr;
+	t* count;
+public:
+
+	shared_pointer(t*ptr) : ptr(ptr), count(new int(1)) {}
+
+	shared_pointer(const shared_pointer& obj)
+	{
+		this->count = obj.count;
+		this->ptr = obj.ptr;
+
+		if (count)
+		{
+			count++;
+		}
+	}
+
+	shared_pointer<t>& operator =(const shared_pointer& obj)
+	{
+		if (this != &obj)
+		{
+			if (--(*count) == 0) {
+				delete ptr;
+				delete count;
+			}
+
+			this->count = obj.count;
+			this->ptr = obj.ptr;
+
+		}
+
+		if (count) {
+			(*count)++;
+		}
+		return*this;
+	}
+
+	shared_pointer(shared_pointer&& obj) noexcept 
+	{
+		this->count = obj.count;
+		this->ptr = obj.ptr;
+
+		obj.ptr = nullptr;
+		obj.count = nullptr;
+	}
+
+
+	shared_pointer<t>& operator =(const shared_pointer&& obj)
+	{
+		if (this != &obj)
+		{
+			if (--(*count) == 0) {
+				delete ptr;
+				delete count;
+			}
+
+			this->count = obj.count;
+			this->ptr = obj.ptr;
+
+		}
+
+		if (count) {
+			(*count)++;
+		}
+		return*this;
+
+		ptr = obj.ptr;
+		count = obj.count;
+
+		obj.ptr = nullptr;
+		obj.count = nullptr;
+	}
+
+	~shared_pointer()
+	{
+		if (--(*count) == 0) {
+			delete ptr;
+			delete count;
+		}
+	}
+};
+
+int main()
+{
+	shared_pointer<int> sp1(new int(42));
+	shared_pointer<int> sp2 = std::move(sp1);
+
+}
+
